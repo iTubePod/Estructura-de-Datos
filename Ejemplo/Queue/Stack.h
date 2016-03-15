@@ -1,24 +1,23 @@
 /*
-	Hector Mauricio Gonzalez Coello
-	A01328258
+    Ivan Aram Gonzalez Su
+    A01022584
 */
 
-#ifndef QUEUE_H
-#define QUEUE_H
+#ifndef STACK_H
+#define STACK_H
 
 #include <iostream>
 #include "Node.h"
 
 template <class T>
-class Queue{
+class Stack{
 private:
     Node<T>* head = nullptr;
-    Node<T>* tail = nullptr;
     int length = 0;
 public:
-    Queue(){}
-    Queue(Node<T>* data){ head = data; tail = data; length++; }
-    ~Queue(){ clear(); }
+    Stack(){}
+    Stack(Node<T>* data){ head = data; length++; }
+    ~Stack(){ clear(); }
     
     bool isEmpty() { return head==nullptr; }
     Node<T>* top() { return head; }
@@ -28,11 +27,11 @@ public:
     void clear();
     
     template <class S>
-    friend std::ostream& operator<< (std::ostream& stream, const Queue<S>& queue);
+    friend std::ostream& operator<< (std::ostream& stream, const Stack<S>& stack);
 };
 
 template <class T>
-Node<T>* Queue<T>::pop(){
+Node<T>* Stack<T>::pop(){
     if(head==nullptr) return nullptr;
     Node<T>* element = head;
     head = head->getNext();
@@ -42,26 +41,23 @@ Node<T>* Queue<T>::pop(){
 }
 
 template <class T>
-void Queue<T>::push(Node<T>* new_node){
-    if(head==nullptr){
-        head = new_node;
-        tail = new_node;
-    }
+void Stack<T>::push(Node<T>* new_node){
+    if(head==nullptr) head = new_node;
     else{
-        tail->setNext(new_node);
-        tail = new_node;
+        new_node->setNext(head);
+        head = new_node;
     }
     length++;
 }
 
 template <class T>
-void Queue<T>::push(T data){
+void Stack<T>::push(T data){
     Node<T>* new_node = new Node<T>(data);
     push(new_node);
 }
 
 template <class T>
-void Queue<T>::clear(){
+void Stack<T>::clear(){
     Node<T>* element = head;
     while(element != nullptr){
         head = element->getNext();
@@ -69,15 +65,14 @@ void Queue<T>::clear(){
         element = head;
     }
     length = 0;
-    tail = nullptr;
 }
 
 template <class S>
-std::ostream& operator<< (std::ostream& stream, const Queue<S>& queue){
-    Node<S>* element = queue.head;
+std::ostream& operator<< (std::ostream& stream, const Stack<S>& stack){
+    Node<S>* element = stack.head;
     stream<<"[";
     while(element != nullptr){
-        if(element != queue.tail) stream<<element->getData()<<", ";
+        if(element->getNext() != nullptr) stream<<element->getData()<<", ";
         else stream<<element->getData();
         element = element->getNext();
     }
