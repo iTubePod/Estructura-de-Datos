@@ -1,0 +1,3 @@
+gdb a.exe
+r
+bt
