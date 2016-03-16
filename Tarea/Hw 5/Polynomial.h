@@ -41,12 +41,26 @@ double Polynomial::evaluate(double x)
 void simplify()
 {
 	Node<Term> * current = head;
-	Node<Term> * previous;
+	Node<Term> * previous = nullptr;
 	while (current->getNext()!=nullptr)
 	{
-		if(current->getExponent()==current->getNext()->getExponent())
-		{
-			
-		}
+        if (current==head)
+        {
+            if(head->getExponent()==head->getNext()->getExponent())
+            {
+                head->SetConstant(head->getConstant()+head->getNext()->getConstant());
+                head->setNext(head->getNext()->getNext());
+            }
+        }
+        else
+        {
+    		if(previous->getExponent()==current->getExponent())
+    		{
+                previous->SetConstant(previous->getConstant()+current->getConstant());
+                previous->setNext(current->getNext());
+    		}
+        }
+        previous = item;
+        item = item->getNext();
 	}
 }
