@@ -4,7 +4,6 @@
 
 Name: Hector Mauricio Gonzalez Coello
 ID number: A01328258
-2016
 */
 #ifndef POLYNOMIAL_H
 #define POLYNOMIAL_H
