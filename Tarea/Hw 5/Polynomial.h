@@ -56,7 +56,6 @@ void Polynomial::simplify()
 				sum = Term(head->getData().getConstant() + head->getNext()->getData().getConstant(), head->getData().getExponent());
 				head->setData(sum);
                 head-> setNext(head->getNext()->getNext());
-                length--;
             }
         }
         else
@@ -67,7 +66,6 @@ void Polynomial::simplify()
 				sum = Term(previous->getData().getConstant() + current->getData().getConstant(), previous->getData().getExponent());
 				previous->setData(sum);
                 previous->setNext(current->getNext());
-                length--;
     		}
         }
         previous = current;
@@ -115,38 +113,30 @@ void Polynomial::insertOrdered(Node<Term> * new_node)
     }
     length++;
 }
-inline Polynomial Polynomial::operator + (const Polynomial & other)
+inline Polynomial Polynomial::operator+(const Polynomial & other)
 {
 	Polynomial poly;
-	poly.head=head;
-	Node<Term> * item = nullptr;
-	item=other.head;
+	Node<Term> * item = other.head;
     while(item->getNext() != nullptr)
     {
         item=item->getNext();
-    	poly.insertOrdered(item);
     }
-    //poly.simplify();
+    item->setNext(head);
+	poly.insertHead(item);
+    poly.simplify();
     return poly;
 }
-std::ostream & operator << (std::ostream & stream, Polynomial & poly)
+std::ostream & operator<< (std::ostream & stream, Polynomial & poly)
 {
 	//Polynomial p = poly;
     Node<Term> * item = poly.getHead();
-	if (item != nullptr && item->getData().getConstant()<0)
-			stream << " - ";
     while(item != nullptr)
     {
-    	if(item->getData().getConstant()>0)
-        	stream << item->getData().getConstant();
-        else if (item->getData().getConstant()<0)
-        	stream << -1*(item->getData().getConstant());
+        stream << item->getData().getConstant();
         stream << "x^"<<item->getData().getExponent();
         item = item->getNext();
-		if (item != nullptr && item->getData().getConstant()>0)
+		if (item != nullptr)
 			stream << " + ";
-		else if (item != nullptr && item->getData().getConstant()<0)
-			stream << " - ";
 		else
 		{
 			stream << std::endl;
