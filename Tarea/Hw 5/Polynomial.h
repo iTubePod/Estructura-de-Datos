@@ -23,7 +23,7 @@ class Polynomial : public LinkedList<Term> {
         void insertOrdered(Term data);
         void insertOrdered(Node<Term> * new_node);
         // Overload the operator to add two polynomials
-        Polynomial * operator+(const Polynomial & other);
+        Polynomial operator+(const Polynomial & other);
 
         // Method to print out a polynomial
         friend std::ostream & operator<< (std::ostream & stream, Polynomial & poly);
@@ -113,18 +113,17 @@ void Polynomial::insertOrdered(Node<Term> * new_node)
     }
     length++;
 }
-inline Polynomial * Polynomial::operator+(const Polynomial & other)
+inline Polynomial Polynomial::operator+(const Polynomial & other)
 {
-	Polynomial * poly;
-	Polynomial ot = other;
-	Node<Term> * item = poly->getHead();
+	Polynomial poly;
+	Node<Term> * item = other.head;
     while(item->getNext() != nullptr)
     {
         item=item->getNext();
     }
-    item->setNext(ot.getHead());
-	poly->insertHead(item);
-    poly->simplify();
+    item->setNext(head);
+	poly.insertHead(item);
+    poly.simplify();
     return poly;
 }
 std::ostream & operator<< (std::ostream & stream, Polynomial & poly)
