@@ -38,7 +38,7 @@ double Polynomial::evaluate(double x)
     }
     return xvalue;
 }
-void simplify()
+void Polynomial::simplify()
 {
 	Node<Term> * current = head;
 	Node<Term> * previous = nullptr;
@@ -63,4 +63,39 @@ void simplify()
         previous = item;
         item = item->getNext();
 	}
+}
+void Polynomial::insertOrdered(Node<Term> * new_node)
+{
+    if (head == nullptr)
+    {
+        head = new_node;
+    }
+    else
+    {
+        Node * item = head;
+        Node * previous = nullptr;
+        while (item != nullptr)
+        {
+            if (item->getExponent() >= new_node->getExponent())
+            {
+                break;
+            }
+            else
+            {
+                previous = item;
+                item = item->getNext();
+            }
+        }
+        if (item == head)
+        {
+            new_node->setNext(head);
+            head = new_node;
+        }
+        else
+        {
+            new_node->setNext(item);
+            previous->setNext(new_node);
+        }
+    }
+    length++;
 }
