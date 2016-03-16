@@ -40,6 +40,7 @@ class LinkedList {
         int searchRecursive (T data);
         // Helper methods
         int getLength() { return length; }
+        Node<T> * getHead() {return head;}
         void clear();
         void printList();
         void print();

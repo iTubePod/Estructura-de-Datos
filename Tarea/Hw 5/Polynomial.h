@@ -5,9 +5,12 @@
 Name: Hector Mauricio Gonzalez Coello
 ID number: A01328258
 */
+#ifndef POLYNOMIAL_H
+#define POLYNOMIAL_H
 
 #include "LinkedList.h"
 #include "Term.h"
+
 
 class Polynomial : public LinkedList<Term> {
     public:
@@ -17,13 +20,13 @@ class Polynomial : public LinkedList<Term> {
         // Add up all the terms with equal exponents
         void simplify();
         // Optional: Change the method to insert in decreasing order
-        //void insertOrdered(Term data);
+        void insertOrdered(Term data);
         void insertOrdered(Node<Term> * new_node);
         // Overload the operator to add two polynomials
-        Polynomial operator+(const Polynomial & other);
+        Polynomial * operator+(const Polynomial & other);
 
         // Method to print out a polynomial
-        friend std::ostream & operator<< (std::ostream & stream, const Polynomial & poly);
+        friend std::ostream & operator<< (std::ostream & stream, Polynomial & poly);
 };
 
 double Polynomial::evaluate(double x)
@@ -31,9 +34,9 @@ double Polynomial::evaluate(double x)
     // Remember to indicate that the nodes used in this class contain Terms
     Node<Term> * item = head;
     double xvalue=0;
-    while(item->getNext()!=nullptr)
+    while(item!=nullptr)
     {
-    	xvalue=xvalue+(item->getConstant()*(x^item->getExponent()));
+    	xvalue=xvalue+(item->getData().getConstant()*pow(x, item->getData().getExponent()));
     	item=item->getNext();
     }
     return xvalue;
@@ -42,28 +45,39 @@ void Polynomial::simplify()
 {
 	Node<Term> * current = head;
 	Node<Term> * previous = nullptr;
+	Term sum;
 	while (current->getNext()!=nullptr)
 	{
         if (current==head)
         {
-            if(head->getExponent()==head->getNext()->getExponent())
+            if(head->getData().getExponent()==head->getNext()->getData().getExponent())
             {
-                head->SetConstant(head->getConstant()+head->getNext()->getConstant());
-                head->setNext(head->getNext()->getNext());
+                //head->getData().setConstant((head->getData().getConstant()) + (head->getNext()->getData().getConstant()));
+				sum = Term(head->getData().getConstant() + head->getNext()->getData().getConstant(), head->getData().getExponent());
+				head->setData(sum);
+                head-> setNext(head->getNext()->getNext());
             }
         }
         else
         {
-    		if(previous->getExponent()==current->getExponent())
+    		if(previous->getData().getExponent()==current->getData().getExponent())
     		{
-                previous->SetConstant(previous->getConstant()+current->getConstant());
+                //previous->getData().setConstant(previous->getData().getConstant()+current->getData().getConstant());
+				sum = Term(previous->getData().getConstant() + current->getData().getConstant(), previous->getData().getExponent());
+				previous->setData(sum);
                 previous->setNext(current->getNext());
     		}
         }
-        previous = item;
-        item = item->getNext();
+        previous = current;
+        current = current->getNext();
 	}
 }
+void Polynomial::insertOrdered(Term data) 
+{
+	Node <Term> * new_node=new Node<Term>(data);
+	insertOrdered(new_node);
+}
+
 void Polynomial::insertOrdered(Node<Term> * new_node)
 {
     if (head == nullptr)
@@ -72,11 +86,11 @@ void Polynomial::insertOrdered(Node<Term> * new_node)
     }
     else
     {
-        Node * item = head;
-        Node * previous = nullptr;
+        Node<Term> * item = head;
+        Node<Term> * previous = nullptr;
         while (item != nullptr)
         {
-            if (item->getExponent() >= new_node->getExponent())
+            if (item->getData().getExponent() >= new_node->getData().getExponent())
             {
                 break;
             }
@@ -99,3 +113,37 @@ void Polynomial::insertOrdered(Node<Term> * new_node)
     }
     length++;
 }
+inline Polynomial * Polynomial::operator+(const Polynomial & other)
+{
+	Polynomial * poly;
+	Polynomial ot = other;
+	Node<Term> * item = poly->getHead();
+    while(item->getNext() != nullptr)
+    {
+        item=item->getNext();
+    }
+    item->setNext(ot.getHead());
+	poly->insertHead(item);
+    poly->simplify();
+    return poly;
+}
+std::ostream & operator<< (std::ostream & stream, Polynomial & poly)
+{
+	//Polynomial p = poly;
+    Node<Term> * item = poly.getHead();
+    while(item != nullptr)
+    {
+        stream << item->getData().getConstant();
+        stream << "x^"<<item->getData().getExponent();
+        item = item->getNext();
+		if (item != nullptr)
+			stream << " + ";
+		else
+		{
+			stream << std::endl;
+			break;
+		}
+    }
+    return stream;
+}
+#endif
