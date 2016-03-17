@@ -118,17 +118,17 @@ void Polynomial::insertOrdered(Node<Term> * new_node)
 }
 inline Polynomial Polynomial::operator + (const Polynomial & other)
 {
-	Polynomial poly;
-	poly.head=head;
-	Node<Term> * item = nullptr;
-	item=other.head;
-    while(item->getNext() != nullptr)
-    {
-        item=item->getNext();
-    	poly.insertOrdered(item);
-    }
-    //poly.simplify();
-    return poly;
+	Polynomial sum;
+	sum.head = head;
+	Node<Term> * item = other.head;
+	while(item != nullptr)
+	{
+		item=item->getNext();
+		sum.insertOrdered(item);
+		sum.print();
+	}
+    sum.simplify();
+    return sum;
 }
 std::ostream & operator << (std::ostream & stream, Polynomial & poly)
 {
