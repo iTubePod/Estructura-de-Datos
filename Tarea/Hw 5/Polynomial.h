@@ -47,7 +47,7 @@ void Polynomial::simplify()
 	Node<Term> * current = head;
 	Node<Term> * previous = nullptr;
 	Term sum;
-	while (current->getNext()!=nullptr)
+	while (current!=nullptr)
 	{
         if (current==head)
         {
@@ -80,7 +80,6 @@ void Polynomial::insertOrdered(Term data)
 	Node <Term> * new_node=new Node<Term>(data);
 	insertOrdered(new_node);
 }
-
 void Polynomial::insertOrdered(Node<Term> * new_node)
 {
     if (head == nullptr)
@@ -105,30 +104,35 @@ void Polynomial::insertOrdered(Node<Term> * new_node)
         }
         if (item == head)
         {
+			//insertHead(new_node);
             new_node->setNext(head);
             head = new_node;
         }
         else
         {
+			//insertTail(new_node);
             new_node->setNext(item);
             previous->setNext(new_node);
         }
     }
     length++;
 }
-inline Polynomial Polynomial::operator + (const Polynomial & other)
+Polynomial Polynomial::operator + (const Polynomial & other)
 {
-	Polynomial sum;
-	sum.head = head;
+	Polynomial sum = *this;
+   // poly.insertOrdered(other);
 	Node<Term> * item = other.head;
-	while(item != nullptr)
+    Term x;
+    //sum.insertOrdered(item);
+    //sum.insertOrdered(item->getNext());
+	while (item != nullptr)
 	{
-		item=item->getNext();
-		sum.insertOrdered(item);
-		sum.print();
+        x = Term(item->getData().getConstant(), item->getData().getExponent());
+		sum.insertOrdered(x);
+		item = item->getNext();
 	}
-    sum.simplify();
-    return sum;
+	sum.simplify();
+	return sum;
 }
 std::ostream & operator << (std::ostream & stream, Polynomial & poly)
 {
@@ -139,9 +143,15 @@ std::ostream & operator << (std::ostream & stream, Polynomial & poly)
     while(item != nullptr)
     {
     	if(item->getData().getConstant()>0)
-        	stream << item->getData().getConstant();
+            if(item->getData().getConstant()!=1)
+        	   stream << item->getData().getConstant();
+            else
+                stream<<"";
         else if (item->getData().getConstant()<0)
-        	stream << -1*(item->getData().getConstant());
+            if(item->getData().getConstant()!=-1)
+        	   stream << -1*(item->getData().getConstant());
+            else
+                stream<<"";
         stream << "x^"<<item->getData().getExponent();
         item = item->getNext();
 		if (item != nullptr && item->getData().getConstant()>0)

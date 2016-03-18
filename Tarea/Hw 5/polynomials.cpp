@@ -60,10 +60,10 @@ int main()
     poly_2.simplify();
     std::cout << "This is the new polynomial 2:\n" << poly_2 << std::endl;
 
-    //poly_3 = poly_1 + poly_2;
+    poly_3 = poly_1 + poly_2;
 
     // Show the current polynomial
-    //std::cout << "This is the polynomial 3:\n" << poly_3 << std::endl;
+    std::cout << "This is the polynomial 3:\n" << poly_3 << std::endl;
 
     return 0;
 }
