@@ -152,7 +152,13 @@ std::ostream & operator << (std::ostream & stream, Polynomial & poly)
         	   stream << -1*(item->getData().getConstant());
             else
                 stream<<"";
-        stream << "x^"<<item->getData().getExponent();
+        if(item->getData().getExponent()!=0)
+            if (item->getData().getExponent()!=1)
+                stream << "x^"<<item->getData().getExponent();
+            else
+                stream<<"x";
+        else
+            stream<<"";
         item = item->getNext();
 		if (item != nullptr && item->getData().getConstant()>0)
 			stream << " + ";
