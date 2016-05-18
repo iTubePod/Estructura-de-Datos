@@ -1,0 +1,10 @@
+DELETE TREE
+	CASES
+		1. No sons (easier)
+		2. Only left son
+			return left son 
+		3. Only right son
+			return right son
+		4. Sons at both sides
+			look for the min value of the subtree
+			return ir to make it the new root of the subtree
